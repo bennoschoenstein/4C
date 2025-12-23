@@ -15,10 +15,7 @@
 #include "4C_solver_nonlin_nox_interface_required_base.hpp"
 #include "4C_solver_nonlin_nox_linearsystem_base.hpp"
 #include "4C_solver_nonlin_nox_scaling.hpp"
-#include "4C_utils_parameter_list.fwd.hpp"
 
-#include <NOX_Common.H>
-#include <NOX_Epetra_Scaling.H>
 #include <NOX_Utils.H>
 #include <Teuchos_Time.hpp>
 

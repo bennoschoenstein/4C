@@ -47,7 +47,6 @@ Solid::TimeInt::Base::Base()
       int_ptr_(nullptr),
       dbc_ptr_(nullptr)
 {
-  Epetra_Object::SetTracebackMode(1);
   // empty constructor
 }
 

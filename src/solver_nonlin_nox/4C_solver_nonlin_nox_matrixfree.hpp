@@ -17,7 +17,10 @@
 
 #include <Epetra_Operator.h>
 #include <Epetra_Vector.h>
-#include <NOX_Epetra_MatrixFree.H>
+#include <NOX_Thyra_Group.H>
+#include <NOX_Thyra_MatrixFreeJacobianOperator.hpp>
+#include <Thyra_EpetraThyraWrappers.hpp>
+#include <Thyra_StateFuncModelEvaluatorBase.hpp>
 
 FOUR_C_NAMESPACE_OPEN
 
@@ -27,10 +30,44 @@ namespace NOX
   {
     class MatrixFree : public NOX::Nln::Interface::JacobianBase
     {
+      class ThyraModelWrapper : public ::Thyra::StateFuncModelEvaluatorBase<double>
+      {
+       public:
+        ThyraModelWrapper(const std::shared_ptr<NOX::Nln::Interface::RequiredBase> model,
+            const std::shared_ptr<const Core::LinAlg::Map> map);
+
+        ::Thyra::ModelEvaluatorBase::InArgs<double> getNominalValues() const override;
+
+        ::Thyra::ModelEvaluatorBase::InArgs<double> createInArgs() const override;
+
+        Teuchos::RCP<const ::Thyra::VectorSpaceBase<double>> get_x_space() const override;
+
+        Teuchos::RCP<const ::Thyra::VectorSpaceBase<double>> get_f_space() const override;
+
+        Teuchos::RCP<const ::Thyra::VectorSpaceBase<double>> get_p_space(int l) const override;
+
+        Teuchos::RCP<const ::Thyra::VectorSpaceBase<double>> get_g_space(int j) const override;
+
+        ::Thyra::ModelEvaluatorBase::OutArgs<double> createOutArgsImpl() const override;
+
+        void evalModelImpl(const ::Thyra::ModelEvaluatorBase::InArgs<double>& inArgs,
+            const ::Thyra::ModelEvaluatorBase::OutArgs<double>& outArgs) const override;
+
+       private:
+        const std::shared_ptr<NOX::Nln::Interface::RequiredBase> model_;
+        const std::shared_ptr<const Core::LinAlg::Map> map_;
+
+        ::Thyra::ModelEvaluatorBase::InArgs<double> prototype_in_args_;
+        ::Thyra::ModelEvaluatorBase::OutArgs<double> prototype_out_args_;
+
+        Teuchos::RCP<const ::Thyra::VectorSpaceBase<double>> vector_space_;
+      };
+
       class SparseOperatorWrapper : public Core::LinAlg::SparseOperator
       {
        public:
-        SparseOperatorWrapper(Epetra_Operator& op);
+        SparseOperatorWrapper(const ::Thyra::LinearOpBase<double>& op,
+            const std::shared_ptr<const Core::LinAlg::Map> map);
 
         // Methods of Core::LinAlg::SparseOperator interface
         Epetra_Operator& epetra_operator() override;
@@ -98,21 +135,26 @@ namespace NOX
         const Epetra_Map& OperatorRangeMap() const override;
 
        private:
-        Epetra_Operator& operator_;
+        const ::Thyra::LinearOpBase<double>& operator_;
+        const std::shared_ptr<const Core::LinAlg::Map> map_;
       };
 
      public:
       MatrixFree(Teuchos::ParameterList& printParams,
-          const Teuchos::RCP<NOX::Nln::Interface::RequiredBase>& required,
-          const NOX::Nln::Vector& cloneVector, double lambda, bool useNewPerturbation = false);
+          const std::shared_ptr<NOX::Nln::Interface::RequiredBase>& required,
+          const NOX::Nln::Vector& cloneVector, double lambda);
 
       Core::LinAlg::SparseOperator& get_operator();
 
       bool computeJacobian(const Epetra_Vector& x, Epetra_Operator& Jac) override;
 
      private:
-      ::NOX::Epetra::MatrixFree matrix_free_;
-      SparseOperatorWrapper wrapper_;
+      std::shared_ptr<const Core::LinAlg::Map> build_map(const NOX::Nln::Vector& cloneVector);
+
+      ::NOX::Thyra::MatrixFreeJacobianOperator<double> matrix_free_;
+      std::shared_ptr<const Core::LinAlg::Map> map_;
+      ThyraModelWrapper thyra_model_wrapper_;
+      SparseOperatorWrapper sparse_operator_wrapper_;
     };
   }  // namespace Nln
 }  // namespace NOX

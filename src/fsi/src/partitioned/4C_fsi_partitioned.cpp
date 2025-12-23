@@ -539,15 +539,11 @@ Teuchos::RCP<NOX::Nln::LinearSystemBase> FSI::Partitioned::create_linear_system(
     double lambda = mfParams.get("lambda", 1.0e-4);
     mfresitemax_ = mfParams.get("itemax", -1);
 
-    bool kelleyPerturbation = mfParams.get("Kelley Perturbation", false);
 
     // MatrixFree seems to be the most interesting choice. But you
     // must set a rather low tolerance for the linear solver.
 
-    auto epetra_rcp_interface = Teuchos::rcpFromRef(*interface);
-
-    auto MF = std::make_shared<NOX::Nln::MatrixFree>(
-        printParams, epetra_rcp_interface, noxSoln, lambda, kelleyPerturbation);
+    auto MF = std::make_shared<NOX::Nln::MatrixFree>(printParams, interface, noxSoln, lambda);
     iJac = MF;
     J = Core::Utils::shared_ptr_from_ref(MF->get_operator());
   }

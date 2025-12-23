@@ -109,7 +109,7 @@ namespace Core::Conditions
     void print() const;
 
     /*!
-     * \brief Get Epetra communicator
+     * \brief Get MPI communicator
      *
      */
     inline MPI_Comm get_comm() const;

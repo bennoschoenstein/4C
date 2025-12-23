@@ -24,6 +24,7 @@ THERMAL DYNAMIC/RUNTIME CSV OUTPUT:
 SOLVER 1:
   SOLVER: "Belos"
   AZPREC: "MueLu"
+  AZSOLVE: "CG"
   AZOUTPUT: 1
   AZREUSE: 10
   MUELU_XML_FILE: "xml/multigrid/thermo.xml"

@@ -52,7 +52,7 @@ namespace Core::LinearSolver
      * it re-uses the existing preconditioner and only updates the fine level matrix
      * for the Krylov solver.
      *
-     * @param matrix Epetra_Operator to be used as input for the preconditioner
+     * @param matrix Sparse operator to be used as input for the preconditioner
      * @param x Solution of the linear system
      * @param b Right-hand side of the linear system
      */

@@ -80,14 +80,14 @@ jobs:
         env:
           TEST_CHUNK: ${{ matrix.test-chunk }}
       - name: Upload merged coverage data
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: ${{ github.job }}-4C-coverage-data-${{ matrix.test-chunk }}.profdata
           path: |
             ${{ github.workspace }}/4C-coverage-data-${{ matrix.test-chunk }}.profdata
           retention-days: 1
       - name: Upload test report
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         if: success() || failure()
         with:
           name: clang18_coverage_test_report-${{ matrix.test-chunk }}.xml
@@ -131,7 +131,7 @@ jobs:
           git config --global --add safe.directory $GITHUB_WORKSPACE
           ./utilities/set_up_dev_env.sh
       - name: Download reports
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           path: ${{ github.workspace }}
           merge-multiple: true
@@ -161,7 +161,7 @@ jobs:
           COVERAGE_PERCENT=`llvm-cov export --object ./build/lib4C.so --format=text --instr-profile=4C-coverage-data.profdata --summary-only --ignore-filename-regex=".*/build/.*" | python -c 'import json, sys; print(json.load(sys.stdin)["data"][0]["totals"]["lines"]["percent"])'`
           anybadge -l coverage --suffix=" %" --value=$COVERAGE_PERCENT -m "%.2f" 75=red 90=orange 100=green > coverage_report/badge_coverage.svg
       - name: Upload coverage html report
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: 4C_coverage_report
           path: ${{ github.workspace }}/coverage_report

@@ -35,7 +35,7 @@ jobs:
           use-ccache: "false"
           additional-cmake-flags: -DFOUR_C_ENABLE_DOXYGEN="ON"
       - name: Upload doxygen
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: doxygen
           path: ${{ github.workspace }}/build/doc/doxygen/html/
@@ -60,7 +60,7 @@ jobs:
           build-directory: ${{ github.workspace }}/build
           use-ccache: "true"
       - name: Upload documentation
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: documentation
           path: ${{ github.workspace }}/build/doc/documentation/html/

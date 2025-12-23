@@ -14,15 +14,16 @@
 #include "4C_geometric_search_distributed_tree.hpp"
 #include "4C_linalg_transfer.hpp"
 #include "4C_linalg_utils_sparse_algebra_assemble.hpp"
-#include "4C_linalg_utils_sparse_algebra_create.hpp"
-#include "4C_linalg_utils_sparse_algebra_manipulation.hpp"
 #include "4C_linalg_vector.hpp"
+#include "4C_utils_exceptions.hpp"
 
 #include <Teuchos_TimeMonitor.hpp>
 #include <Zoltan2_PartitioningProblem.hpp>
 #include <Zoltan2_PartitioningSolution.hpp>
 #include <Zoltan2_XpetraCrsGraphAdapter.hpp>
 #include <Zoltan2_XpetraMultiVectorAdapter.hpp>
+
+#include <utility>
 
 FOUR_C_NAMESPACE_OPEN
 
@@ -62,21 +63,18 @@ std::shared_ptr<Core::LinAlg::Graph> Core::Rebalance::rebalance_graph(
 {
   TEUCHOS_FUNC_TIME_MONITOR("Rebalance::rebalance_graph");
 
-  if (!initialGraph.filled()) FOUR_C_THROW("Graph to be rebalanced is not completed yet!");
-
   using GraphAdapter = Zoltan2::XpetraCrsGraphAdapter<Epetra_CrsGraph, Epetra_MultiVector>;
   using VectorAdapter = Zoltan2::XpetraMultiVectorAdapter<Epetra_MultiVector>;
 
   if (!initialGraph.filled())
     FOUR_C_THROW("The graph needs to be fill completed before being able to be rebalanced.");
 
-  auto* graphAdapter = new GraphAdapter(Teuchos::rcpFromRef(initialGraph.get_epetra_crs_graph()),
+  GraphAdapter graphAdapter(Teuchos::rcpFromRef(initialGraph.get_epetra_crs_graph()),
       initialNodeWeights != nullptr ? 1 : 0, initialEdgeWeights != nullptr ? 1 : 0);
 
-  std::vector<double> nodeWeights;
   if (initialNodeWeights != nullptr)
   {
-    graphAdapter->setVertexWeights(initialNodeWeights->get_values(), 1, 0);
+    graphAdapter.setVertexWeights(initialNodeWeights->get_values(), 1, 0);
   }
 
   std::vector<double> edgeWeights;
@@ -91,27 +89,28 @@ std::shared_ptr<Core::LinAlg::Graph> Core::Rebalance::rebalance_graph(
       initialEdgeWeights->extract_my_row_view(local_row, numEntries, entries, indices);
       for (int i = 0; i < numEntries; i++) edgeWeights.push_back(entries[i]);
     }
-    graphAdapter->setEdgeWeights(edgeWeights.data(), 1, 0);
+    graphAdapter.setEdgeWeights(edgeWeights.data(), 1, 0);
   }
 
+  std::optional<VectorAdapter> vectorAdapter = std::nullopt;
   if (initialNodeCoordinates != nullptr)
   {
     std::vector<const double*> weights;
     std::vector<int> stride;
 
-    auto* vectorAdapter = new VectorAdapter(
+    vectorAdapter.emplace(
         Teuchos::rcpFromRef(initialNodeCoordinates->get_epetra_multi_vector()), weights, stride);
-    graphAdapter->setCoordinateInput(vectorAdapter);
+    graphAdapter.setCoordinateInput(&vectorAdapter.value());
   }
 
   Zoltan2::PartitioningProblem<GraphAdapter> problem(
-      graphAdapter, &rebalanceParams, initialGraph.get_comm());
+      &graphAdapter, &rebalanceParams, initialGraph.get_comm());
   problem.solve();
 
   const auto solution = problem.getSolution();
 
   Teuchos::RCP<Epetra_CrsGraph> balancedGraph = Teuchos::null;
-  graphAdapter->applyPartitioningSolution(
+  graphAdapter.applyPartitioningSolution(
       initialGraph.get_epetra_crs_graph(), balancedGraph, solution);
 
   balancedGraph->FillComplete();
@@ -138,18 +137,18 @@ Core::Rebalance::rebalance_coordinates(const Core::LinAlg::MultiVector<double>& 
 
   std::vector<int> stride(initialWeights.num_vectors(), initialWeights.num_vectors());
 
-  auto* adapter = new VectorAdapter(
+  VectorAdapter adapter(
       Teuchos::rcpFromRef(initialCoordinates.get_epetra_multi_vector()), weights, stride);
-  Zoltan2::PartitioningProblem<VectorAdapter> problem(adapter, &rebalanceParams);
+  Zoltan2::PartitioningProblem<VectorAdapter> problem(&adapter, &rebalanceParams);
 
   problem.solve();
 
   Teuchos::RCP<Epetra_MultiVector> balancedCoordinates;
   Teuchos::RCP<Epetra_MultiVector> balancedWeights;
 
-  adapter->applyPartitioningSolution(
+  adapter.applyPartitioningSolution(
       initialCoordinates.get_epetra_multi_vector(), balancedCoordinates, problem.getSolution());
-  adapter->applyPartitioningSolution(
+  adapter.applyPartitioningSolution(
       initialWeights.get_epetra_multi_vector(), balancedWeights, problem.getSolution());
 
   return {std::make_shared<Core::LinAlg::MultiVector<double>>(*balancedCoordinates),

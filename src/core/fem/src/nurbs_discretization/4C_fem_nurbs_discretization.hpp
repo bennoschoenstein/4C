@@ -47,7 +47,7 @@ namespace Core::FE
       \brief Standard Constructor
 
       \param name: name of this nurbs discretization
-      \param comm: An epetra comm object associated with this discretization
+      \param comm: An MPI comm object associated with this discretization
       \param n_dim: number of space dimensions of this discretization
       */
       NurbsDiscretization(const std::string name, MPI_Comm comm, unsigned int n_dim);

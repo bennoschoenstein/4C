@@ -83,7 +83,7 @@ bool NOX::FSI::LinearSystemGCR::apply_jacobian_inverse(
   // Zero out the delta X of the linear problem if requested by user.
   if (zeroInitialGuess) result.init(0.0);
 
-  // Create Epetra linear problem object for the linear solve
+  // Create linear problem object for the linear solve
   NOX::Nln::LinearProblem problem{jacPtr,
       Core::Utils::shared_ptr_from_ref(result.get_linalg_vector()),
       Core::Utils::shared_ptr_from_ref(nonConstInput.get_linalg_vector())};

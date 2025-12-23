@@ -2901,7 +2901,7 @@ void FLD::XFluid::check_matrix_nullspace()
 
     Core::LinAlg::Vector<double> result(c->get_map(), false);
 
-    state_->sysmat_->Apply(c->get_epetra_multi_vector(), result);
+    state_->sysmat_->multiply(false, *c, result);
 
     double norm = 1e9;
 

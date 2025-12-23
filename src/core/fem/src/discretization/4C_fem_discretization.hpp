@@ -448,7 +448,7 @@ namespace Core::FE
     \brief Standard Constructor
 
     \param name: name of this discretization
-    \param comm: Epetra comm object associated with this discretization
+    \param comm: MPI comm object associated with this discretization
     \param n_dim: number of space dimensions of this discretization
     */
     Discretization(const std::string& name, MPI_Comm comm, unsigned int n_dim);
@@ -2403,7 +2403,7 @@ namespace Core::FE
     //! Name of this discretization
     std::string name_;
 
-    //! Epetra_comm
+    //! MPI communicator
     MPI_Comm comm_;
 
     //! DiscretizationWriter

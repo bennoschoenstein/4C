@@ -526,8 +526,7 @@ std::shared_ptr<Core::LinAlg::MultiVector<double>> Core::FE::compute_superconver
 
   // if no pbc are involved leave here
   if (noderowmap.point_same_as(*fullnoderowmap))
-    return std::make_shared<Core::LinAlg::MultiVector<double>>(
-        nodevec.get_ref_of_epetra_fevector());
+    return std::make_shared<Core::LinAlg::MultiVector<double>>(nodevec.as_multi_vector());
 
   // solution vector based on full row map in which the solution of the master node is inserted into
   // slave nodes

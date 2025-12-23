@@ -586,8 +586,9 @@ void PoroPressureBased::PorofluidElastScatraArteryCouplingNonConformingAlgorithm
   for (int i = 0; i < artery_dis_->dof_row_map()->num_my_elements(); ++i)
   {
     const int artery_dof_gid = artery_dis_->dof_row_map()->gid(i);
-    const double kappa_value = (mortar_kappa_inv_
-            ->get_ref_of_epetra_fevector())[0][mortar_kappa_inv_->get_map().lid(artery_dof_gid)];
+    const double kappa_value = mortar_kappa_inv_->as_multi_vector()
+                                   .get_vector(0)
+                                   .get_values()[mortar_kappa_inv_->get_map().lid(artery_dof_gid)];
 
     if (fabs(kappa_value) > 1.0e-10)
       mortar_kappa_inv_->replace_global_value(artery_dof_gid, 0, 1.0 / kappa_value);

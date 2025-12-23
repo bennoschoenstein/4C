@@ -52,7 +52,7 @@ void Core::FE::Discretization::check_filled_globally()
   // global filled flag (is true / one if and only if filled_ == true on each processor
   int globalfilled = 0;
 
-  // convert filled_ flag on this processor  into integer (no Epetra communicator for type bool)
+  // convert filled_ flag on this processor into integer (no communicator for type bool)
   int localfilled = (int)filled_;
 
   /*the global filled flag is set to the minimal value of any local filled flag

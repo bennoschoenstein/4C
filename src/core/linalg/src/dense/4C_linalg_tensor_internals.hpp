@@ -347,12 +347,24 @@ namespace Core::LinAlg
   constexpr bool is_compressed_tensor =
       is_tensor<Tensor> && std::remove_cvref_t<Tensor>::is_compressed;
 
+  template <typename T>
+  struct IsComplexArithmetic : std::false_type
+  {
+  };
+
+  template <typename T>
+    requires(std::is_arithmetic_v<T>)
+  struct IsComplexArithmetic<std::complex<T>> : std::true_type
+  {
+  };
+
   /*!
    * @brief A check whether a type is a admissible scalar type for a tensor
    */
   template <typename Scalar>
   static constexpr bool is_scalar =
-      std::is_arithmetic_v<Scalar> || FADUtils::SacadoFadType<std::remove_cvref_t<Scalar>>;
+      std::is_arithmetic_v<Scalar> || IsComplexArithmetic<Scalar>::value ||
+      FADUtils::SacadoFadType<std::remove_cvref_t<Scalar>>;
 
   template <typename Tensor>
   using TensorCompressionType =

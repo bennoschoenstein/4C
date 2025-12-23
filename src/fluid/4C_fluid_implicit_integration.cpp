@@ -271,8 +271,6 @@ void FLD::FluidImplicitTimeInt::init()
     if (Teuchos::getIntegralValue<Inpar::FLUID::MeshTying>(*params_, "MESHTYING") ==
         Inpar::FLUID::no_meshtying)
     {
-      // initialize standard (stabilized) system matrix (construct its graph already)
-      // off_proc_assembly_ requires an EpetraFECrs matrix
       if (off_proc_assembly_)
       {
         sysmat_ = std::make_shared<Core::LinAlg::SparseMatrix>(
@@ -1139,9 +1137,6 @@ void FLD::FluidImplicitTimeInt::evaluate_mat_and_rhs(Teuchos::ParameterList& ele
     // loop over row elements
     const int numrowele = discret_->num_my_row_elements();
 
-    // REMARK: in this XFEM framework the whole evaluate routine uses only row elements
-    // and assembles into EpetraFECrs matrix
-    // this is 4C-unusual but more efficient in all XFEM applications
     for (int i = 0; i < numrowele; ++i)
     {
       Core::Elements::Element* actele = discret_->l_row_element(i);
@@ -1166,8 +1161,6 @@ void FLD::FluidImplicitTimeInt::evaluate_mat_and_rhs(Teuchos::ParameterList& ele
       std::vector<int> myowner(la[0].lmowner_.size(),
           Core::Communication::my_mpi_rank(strategy.systemvector1()->get_comm()));
       {
-        // calls the Assemble function for EpetraFECrs matrices including communication of non-row
-        // entries
         sysmat->fe_assemble(strategy.elematrix1(), la[0].lm_, myowner, la[0].lm_);
       }
       // introduce an vector containing the rows for that values have to be communicated
@@ -2251,7 +2244,7 @@ void FLD::FluidImplicitTimeInt::check_matrix_nullspace()
 
     Core::LinAlg::Vector<double> result(c->get_map(), false);
 
-    sysmat_->Apply(c->get_epetra_multi_vector(), result);
+    sysmat_->multiply(false, *c, result);
 
     double norm = 1e9;
 
@@ -6344,7 +6337,7 @@ void FLD::FluidImplicitTimeInt::write_output_kinetic_energy()
 
   // compute kinetic energy
   double energy = 0.0;
-  Core::LinAlg::Vector<double> mtimesu(massmat_->OperatorRangeMap(), true);
+  Core::LinAlg::Vector<double> mtimesu(massmat_->domain_map(), true);
   massmat_->Apply(*velnp_, mtimesu);
   velnp_->dot(mtimesu, &energy);
   energy *= 0.5;

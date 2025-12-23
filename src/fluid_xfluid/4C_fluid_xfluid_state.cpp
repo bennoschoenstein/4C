@@ -83,11 +83,6 @@ void FLD::XFluidState::CouplingState::complete_coupling_matrices_and_rhs(
   C_sx_->complete(xfluiddofrowmap, slavedofrowmap);
   C_ss_->complete(slavedofrowmap, slavedofrowmap);
 
-  //  std::cout << "number of nonzeros: C_xs" << C_xs_->EpetraMatrix()->MaxNumEntries() <<
-  //  std::endl; std::cout << "number of nonzeros: C_sx" << C_sx_->EpetraMatrix()->MaxNumEntries()
-  //  << std::endl; std::cout << "number of nonzeros: C_ss" <<
-  //  C_ss_->EpetraMatrix()->MaxNumEntries() << std::endl;
-  //-------------------------------------------------------------------------------
   // export the rhs coupling vector to a row vector
   Core::LinAlg::Vector<double> rhC_s_tmp(rhC_s_->get_map(), true);
   Core::LinAlg::Export exporter_rhC_s_col(rhC_s_col_->get_map(), rhC_s_tmp.get_map());

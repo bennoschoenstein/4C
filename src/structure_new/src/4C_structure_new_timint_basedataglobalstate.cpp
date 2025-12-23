@@ -555,7 +555,7 @@ void Solid::TimeInt::BaseDataGlobalState::setup_rot_vec_map_extractor(
 
   }  // loop over row nodes
 
-  // create the required Epetra maps
+  // create the required maps
   std::vector<int> additdofmapvec;
   additdofmapvec.reserve(additdofset.size());
   additdofmapvec.assign(additdofset.begin(), additdofset.end());

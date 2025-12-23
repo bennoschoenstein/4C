@@ -41,7 +41,7 @@ namespace FSI
      * This function is static so that it can be called without creating a factory object first.
      * It can be called directly.
      *
-     * \param[in] comm Epetra Communicator used in FSI::Partitioned for Terminal Output
+     * \param[in] comm MPI Communicator used in FSI::Partitioned for Terminal Output
      * \param[in] fsidyn List of FSI Input parameters
      *
      * \return Coupling algorithm based on Dirichlet-Neumann partitioning

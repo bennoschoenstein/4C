@@ -111,7 +111,7 @@ jobs:
           TEST_CHUNK: ${{ matrix.test-chunk }}
       - name: Upload test report
         if: success() || failure()
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: trilinos_test_report-${{ matrix.test-chunk }}.xml
           path: |

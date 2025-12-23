@@ -392,7 +392,7 @@ void Discret::Elements::Rigidsphere::calc_stochastic_force(
   // damping coefficient
   double gamma = my_damping_constant();
 
-  /*get pointer at Epetra multivector in parameter list linking to random numbers for stochastic
+  /*get pointer at multivector in parameter list linking to random numbers for stochastic
    * forces with zero mean and standard deviation (2*kT / dt)^0.5*/
   std::shared_ptr<Core::LinAlg::MultiVector<double>> randomnumbers =
       params_interface().get_brownian_dyn_param_interface()->get_random_forces();

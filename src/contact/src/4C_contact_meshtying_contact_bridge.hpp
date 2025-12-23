@@ -76,7 +76,7 @@ namespace CONTACT
     //! @name Access methods
 
     /*!
-    \brief Get Epetra communicator
+    \brief Get MPI communicator
 
     */
     MPI_Comm get_comm() const;

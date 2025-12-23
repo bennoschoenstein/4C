@@ -81,7 +81,7 @@ jobs:
           TEST_CHUNK: ${{ matrix.test-chunk }}
       - name: Upload test report
         if: success() || failure()
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: gcc13_assertions_test_report-${{ matrix.test-chunk }}.xml
           path: |
@@ -140,14 +140,14 @@ jobs:
           retention-days: 1
           name: clang18_build_ccache
       - name: Upload 4C schema
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: ${{ github.job }}-schema
           path: |
             ${{ github.workspace }}/build/4C_schema.json
           retention-days: 1
       - name: Upload 4C metadata
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: ${{ github.job }}-metadata
           path: |
@@ -228,7 +228,7 @@ jobs:
         shell: bash
     steps:
       - uses: actions/checkout@v6
-      - uses: actions/download-artifact@v6
+      - uses: actions/download-artifact@v7
         with:
           name: clang18_build-schema
           path: ${{ github.workspace }}

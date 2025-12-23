@@ -228,9 +228,7 @@ void BeamInteraction::BeamToSolidSurfaceVisualizationOutputWriter::
   if (nodal_force_visualization != nullptr)
     add_beam_interaction_nodal_forces(nodal_force_visualization, beam_contact->discret_ptr(),
         beam_contact->beam_interaction_data_state().get_dis_np()->as_multi_vector(),
-        Core::LinAlg::Vector<double>(beam_contact->beam_interaction_data_state()
-                .get_force_np()
-                ->get_ref_of_epetra_fevector()),
+        Core::LinAlg::Vector<double>(*beam_contact->beam_interaction_data_state().get_force_np()),
         output_params_ptr_->get_write_unique_ids_flag());
 
 
@@ -289,9 +287,8 @@ void BeamInteraction::BeamToSolidSurfaceVisualizationOutputWriter::
         Core::LinAlg::Matrix<3, 2, double> beam_resultant(Core::LinAlg::Initialization::zero);
         Core::LinAlg::Matrix<3, 2, double> solid_resultant(Core::LinAlg::Initialization::zero);
         get_global_coupling_force_resultants(beam_contact->discret(),
-            Core::LinAlg::MultiVector<double>(beam_contact->beam_interaction_data_state()
-                    .get_force_np()
-                    ->get_ref_of_epetra_fevector()),
+            Core::LinAlg::MultiVector<double>(
+                beam_contact->beam_interaction_data_state().get_force_np()->as_multi_vector()),
             *(beam_contact->beam_interaction_data_state().get_dis_np()), beam_resultant,
             solid_resultant);
 

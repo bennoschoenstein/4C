@@ -1135,8 +1135,6 @@ int Utils::Cardiovascular0DManager::solve(Core::LinAlg::SparseMatrix& mat_struct
     solver_params.lin_tol_better = adaptolbetter_;
   }
 
-  // solve with merged matrix
-  // solver_->Solve(mergedmatrix->EpetraMatrix(),mergedsol,mergedrhs,true,counter_==0);
   // solve with BlockMatrix
   solver_params.refactor = true;
   solver_params.reset = counter_ == 0;

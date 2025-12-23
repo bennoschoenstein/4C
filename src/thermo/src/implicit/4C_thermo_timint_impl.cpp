@@ -97,8 +97,7 @@ Thermo::TimIntImpl::TimIntImpl(const Teuchos::ParameterList& ioparams,
   {
     for (size_t col = 0; col < columns; col++)
     {
-      Core::LinAlg::Vector<double> element_material(
-          *overlapping_element_material_vector.get_ref_of_epetra_fevector()(col));
+      Core::LinAlg::Vector<double> element_material(*overlapping_element_material_vector(col));
       double nodal_material = 0.0;
 
       for (auto ele : node.adjacent_elements())
@@ -445,9 +444,9 @@ Thermo::ConvergenceStatus Thermo::TimIntImpl::newton_full()
     fres_->scale(-1.0);
 
     // apply Dirichlet BCs to system of equations
-    tempi_->put_scalar(0.0);  // Useful? depends on solver and more
+    tempi_->put_scalar(0.0);
     Core::LinAlg::apply_dirichlet_to_system(
-        *tang_, *tempi_, *fres_, *zeros_, *(dbcmaps_->cond_map()));
+        *tang_, *tempi_, *fres_, *zeros_, *dbcmaps_->cond_map());
 
     // Solve for tempi_
     // Solve K_Teffdyn . IncT = -R  ===>  IncT_{n+1}

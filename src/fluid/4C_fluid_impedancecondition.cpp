@@ -440,7 +440,6 @@ void FLD::Utils::FluidImpedanceBc::calculate_impedance_tractions_and_update_resi
     }
 
     impedancetbcsysmat_->complete();
-    //  std::cout<<__FILE__<<__LINE__<<*((std::dynamic_pointer_cast<Core::LinAlg::SparseMatrix>(impedancetbcsysmat_))->EpetraMatrix())<<std::endl;
 
     // NOTE: since the building of the linearization is very expensive and since it only
     // changes due to the deformation of the BCs domain (the linearization is independent

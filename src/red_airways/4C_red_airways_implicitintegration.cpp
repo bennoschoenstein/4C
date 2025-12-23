@@ -992,7 +992,7 @@ void Airway::RedAirwayImplicitTimeInt::solve(
   A_debug = std::dynamic_pointer_cast<Core::LinAlg::SparseMatrix>(sysmat_); if (A_debug !=
   nullptr)
   {
-     (A_debug->EpetraMatrix())->print(std::cout);
+     A_debug->print(std::cout);
   }
    //               std::cout<<"Map is:
   ("<<myrank_<<")"<<std::endl<<*(discret_->dof_row_map())<<std::endl;
@@ -1818,7 +1818,7 @@ bool Airway::RedAirwayImplicitTimeInt::sum_all_col_elem_val(
   // Since the acinar_volume vector is a ColMap, we first need to export
   // it to a RowMap and eliminate the ghosted values
   {
-    // define epetra exporter
+    // define exporter
     Core::LinAlg::Export exporter(vec.get_map(), qexp_->get_map());
     // export from ColMap to RowMap
     qexp_->export_to(vec, exporter, Core::LinAlg::CombineMode::zero);

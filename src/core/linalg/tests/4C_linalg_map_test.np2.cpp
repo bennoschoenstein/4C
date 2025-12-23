@@ -31,7 +31,7 @@ namespace
     Core::LinAlg::Map starting_map(NumGlobalElements, 0, comm);
 
     // create a vector
-    auto vector = Core::LinAlg::Vector<double>(starting_map.get_epetra_map(), true);
+    auto vector = Core::LinAlg::Vector<double>(starting_map, true);
 
     const Epetra_Map& expected_map = starting_map.get_epetra_map();
     const Epetra_BlockMap& actual_map = vector.get_map().get_epetra_block_map();

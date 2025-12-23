@@ -3780,15 +3780,12 @@ void Wear::LagrangeStrategyWear::build_saddle_point_system(
     // ***************************************************************************************************
     // export inactive wear rhs
     Core::LinAlg::Vector<double> WearCondRhsexpM(*gmdofnrowmap_);
-    Core::LinAlg::View wear_cond_rhs_m_view(wear_cond_rhs_m_->get_ref_of_epetra_fevector());
-    Core::LinAlg::export_to(
-        wear_cond_rhs_m_view.underlying().as_multi_vector(), WearCondRhsexpM.as_multi_vector());
+    Core::LinAlg::export_to(wear_cond_rhs_m_->as_multi_vector(), WearCondRhsexpM.as_multi_vector());
 
     // export inactive wear rhs
     Core::LinAlg::Vector<double> inactiveWearRhsexpM(*gmdofnrowmap_);
-    Core::LinAlg::View inactive_wear_rhs_m_view(inactive_wear_rhs_m_->get_ref_of_epetra_fevector());
-    Core::LinAlg::export_to(inactive_wear_rhs_m_view.underlying().as_multi_vector(),
-        inactiveWearRhsexpM.as_multi_vector());
+    Core::LinAlg::export_to(
+        inactive_wear_rhs_m_->as_multi_vector(), inactiveWearRhsexpM.as_multi_vector());
 
     wearrhsM->update(1.0, WearCondRhsexpM, 1.0);
     wearrhsM->update(1.0, inactiveWearRhsexpM, 1.0);

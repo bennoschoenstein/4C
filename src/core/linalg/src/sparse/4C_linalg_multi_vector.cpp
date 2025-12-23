@@ -14,12 +14,6 @@
 FOUR_C_NAMESPACE_OPEN
 
 template <typename T>
-Core::LinAlg::MultiVector<T>::MultiVector(const Epetra_BlockMap& Map, int num_columns, bool zeroOut)
-    : vector_(Utils::make_owner<Epetra_MultiVector>(Map, num_columns, zeroOut))
-{
-}
-
-template <typename T>
 Core::LinAlg::MultiVector<T>::MultiVector(
     const Core::LinAlg::Map& Map, int num_columns, bool zeroOut)
     : vector_(
@@ -29,12 +23,6 @@ Core::LinAlg::MultiVector<T>::MultiVector(
 
 template <typename T>
 Core::LinAlg::MultiVector<T>::MultiVector(const Epetra_MultiVector& source)
-    : vector_(Utils::make_owner<Epetra_MultiVector>(source))
-{
-}
-
-template <typename T>
-Core::LinAlg::MultiVector<T>::MultiVector(const Epetra_FEVector& source)
     : vector_(Utils::make_owner<Epetra_MultiVector>(source))
 {
 }
@@ -171,9 +159,9 @@ void Core::LinAlg::MultiVector<T>::multiply(char TransA, char TransB, double Sca
 }
 
 template <typename T>
-void Core::LinAlg::MultiVector<T>::reciprocal(const Epetra_MultiVector& A)
+void Core::LinAlg::MultiVector<T>::reciprocal(const MultiVector& A)
 {
-  ASSERT_EPETRA_CALL(vector_->Reciprocal(A));
+  ASSERT_EPETRA_CALL(vector_->Reciprocal(A.get_epetra_multi_vector()));
 }
 
 template <typename T>

@@ -85,4 +85,23 @@ Teuchos::RCP<const Thyra::LinearOpBase<double>> Core::LinearSolver::Utils::creat
   return block_matrix;
 }
 
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+Teuchos::RCP<Epetra_Vector> Core::LinearSolver::Utils::get_epetra_vector_from_thyra(
+    const Core::LinAlg::Map& map, const Teuchos::RCP<::Thyra::VectorBase<double>>& thyra_vector)
+{
+  return ::Thyra::get_Epetra_Vector(map.get_epetra_map(), thyra_vector);
+}
+
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+Teuchos::RCP<const Epetra_Vector> Core::LinearSolver::Utils::get_epetra_vector_from_thyra(
+    const Core::LinAlg::Map& map,
+    const Teuchos::RCP<const ::Thyra::VectorBase<double>>& thyra_vector)
+{
+  return ::Thyra::get_Epetra_Vector(map.get_epetra_map(), thyra_vector);
+}
+
 FOUR_C_NAMESPACE_CLOSE

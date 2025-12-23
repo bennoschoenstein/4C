@@ -4995,7 +4995,7 @@ void BeamInteraction::BeamToBeamContactPair<numnodes,
 //
 //  std::cout << "ANALYT_LIN: " << std::endl;
 //
-//  std::cout << (*(stiffmatrix_analyt.EpetraMatrix())) << std::endl;
+//  std::cout << (*(stiffmatrix_analyt)) << std::endl;
 //}
 /*----------------------------------------------------------------------*
 |  end: FD-Check of stiffness matrix

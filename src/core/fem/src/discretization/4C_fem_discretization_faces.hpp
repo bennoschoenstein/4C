@@ -126,7 +126,7 @@ namespace Core::FE
     \brief Standard Constructor
 
     \param name: name of this discretization
-    \param comm: Epetra comm object associated with this discretization
+    \param comm: MPI comm object associated with this discretization
     \param n_dim: number of space dimensions of this discretization
     */
     DiscretizationFaces(const std::string name, MPI_Comm comm, unsigned int n_dim);

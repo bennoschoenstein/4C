@@ -40,12 +40,6 @@ namespace Core::LinAlg
 
     explicit FEVector(const Map& Map, bool zeroOut = true);
 
-    /// Copy constructor from epetra to vector
-    explicit FEVector(const Epetra_FEVector& Source);
-
-    explicit FEVector(const Epetra_Vector& Source);
-
-
     // Rule of five: We currently need to take care to make a deep copy of the Epetra_FEVector.
     FEVector(const FEVector& other);
 

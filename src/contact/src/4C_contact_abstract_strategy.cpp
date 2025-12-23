@@ -980,7 +980,7 @@ void CONTACT::AbstractStrategy::update_global_self_contact_state()
 {
   if (not is_self_contact()) return;
 
-  // reset global slave / master Epetra Maps
+  // reset global slave / master maps
   gsnoderowmap_ = std::make_shared<Core::LinAlg::Map>(0, 0, get_comm());
   gsdofrowmap_ = std::make_shared<Core::LinAlg::Map>(0, 0, get_comm());
   gmdofrowmap_ = std::make_shared<Core::LinAlg::Map>(0, 0, get_comm());

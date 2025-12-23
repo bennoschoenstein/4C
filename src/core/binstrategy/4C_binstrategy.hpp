@@ -143,7 +143,7 @@ namespace Core::Binstrategy
      *
      * \param[in] binning_params binning parameters from input
      * \param[in] output_control output control file
-     * \param[in] comm Epetra Communicator
+     * \param[in] comm MPI Communicator
      * \param[in] my_rank id of this process
      * \param[in] correct_node should a node be included into binning? If this function is not
      * provided, all nodes are considered relevant.
@@ -422,7 +422,7 @@ namespace Core::Binstrategy
     /*!
      * \brief create linear map with bin ids
      *
-     * \param[in] comm epetra communicator
+     * \param[in] comm MPI communicator
      *
      * \return linear map linear map based on bin ids
      */

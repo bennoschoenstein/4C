@@ -248,8 +248,7 @@ void ScaTra::MeshtyingStrategyS2I::condense_mat_and_rhs(
         Q_->multiply(true, *residualmaster, Q_residualmaster);
         interfacemaps_->insert_vector(Q_residualmaster, 2, *scatratimint_->residual());
         interfacemaps_->add_vector(
-            Core::LinAlg::MultiVector<double>(imasterresidual_->get_ref_of_epetra_fevector()), 2,
-            *scatratimint_->residual());
+            imasterresidual_->as_multi_vector(), 2, *scatratimint_->residual());
 
         // add projected master-side entries to slave-side entries of global residual vector
         Core::LinAlg::Vector<double> P_residualmaster(*interfacemaps_->map(1));
@@ -670,8 +669,7 @@ void ScaTra::MeshtyingStrategyS2I::evaluate_meshtying()
               systemmatrix->add(*imastermatrix, false, 1., 1.);
               interfacemaps_->add_vector(*islaveresidual_, 1, *scatratimint_->residual());
               interfacemaps_->add_vector(
-                  Core::LinAlg::MultiVector<double>(imasterresidual_->get_ref_of_epetra_fevector()),
-                  2, *scatratimint_->residual());
+                  imasterresidual_->as_multi_vector(), 2, *scatratimint_->residual());
 
               break;
             }
@@ -741,15 +739,10 @@ void ScaTra::MeshtyingStrategyS2I::evaluate_meshtying()
                     false, -1., 1.);
                 systemmatrix->add(*imastermatrix_, false, 1., 1.);
                 Core::LinAlg::Vector<double> islaveresidual(*interfacemaps_->map(1));
-                if (P_->multiply(true,
-                        Core::LinAlg::MultiVector<double>(
-                            imasterresidual_->get_ref_of_epetra_fevector()),
-                        islaveresidual))
-                  FOUR_C_THROW("Matrix-vector multiplication failed!");
+                P_->multiply(true, imasterresidual_->as_multi_vector(), islaveresidual);
                 interfacemaps_->add_vector(islaveresidual, 1, *scatratimint_->residual(), -1.);
-                interfacemaps_->add_vector(Core::LinAlg::MultiVector<double>(
-                                               imasterresidual_->get_ref_of_epetra_fevector()),
-                    2, *scatratimint_->residual());
+                interfacemaps_->add_vector(
+                    imasterresidual_->as_multi_vector(), 2, *scatratimint_->residual());
               }
 
               break;
@@ -819,8 +812,8 @@ void ScaTra::MeshtyingStrategyS2I::evaluate_meshtying()
               // assemble interface residual vectors into global residual vector
               interfacemaps_->add_vector(*islaveresidual_, 1, *scatratimint_->residual());
               interfacemaps_->add_vector(
-                  Core::LinAlg::MultiVector<double>(imasterresidual_->get_ref_of_epetra_fevector()),
-                  2, *scatratimint_->residual());
+                  Core::LinAlg::MultiVector<double>(imasterresidual_->as_multi_vector()), 2,
+                  *scatratimint_->residual());
 
               break;
             }

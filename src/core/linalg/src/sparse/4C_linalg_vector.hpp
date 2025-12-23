@@ -33,9 +33,6 @@ namespace Core::LinAlg
     static_assert(std::is_same_v<T, double>, "Only double is supported for now");
 
    public:
-    /// Basic vector constructor to create vector based on a map and initialize memory with zeros
-    explicit Vector(const Epetra_BlockMap& Map, bool zeroOut = true);
-
     explicit Vector(const Map& Map, bool zeroOut = true);
 
     /// Copy constructor from epetra to vector
@@ -253,8 +250,6 @@ namespace Core::LinAlg
   class Vector<int>
   {
    public:
-    explicit Vector(const Epetra_BlockMap& map, bool zeroOut = true);
-
     explicit Vector(const Map& map, bool zeroOut = true);
 
     Vector(const Map& map, int* values);
@@ -291,19 +286,19 @@ namespace Core::LinAlg
     const Map& get_map() const { return map_.sync(vector_->Map()); };
 
 
-    //! Imports an Epetra_DistObject using the Core::LinAlg::Import object.
+    //! Imports an Vector using the Core::LinAlg::Import object.
     void import(const Vector& A, const Core::LinAlg::Import& Importer,
         Core::LinAlg::CombineMode CombineMode);
 
-    //! Imports an Epetra_DistObject using the Core::LinAlg::Export object.
+    //! Imports an Vector using the Core::LinAlg::Export object.
     void import(const Vector& A, const Core::LinAlg::Export& Exporter,
         Core::LinAlg::CombineMode CombineMode);
 
-    //! Exports an Epetra_DistObject using the Epetra_Import object.
+    //! Exports an Vector using the Core::LinAlg::Import object.
     void export_to(const Vector& A, const Core::LinAlg::Import& Importer,
         Core::LinAlg::CombineMode CombineMode);
 
-    //! Exports an Epetra_DistObject using the Epetra_Import object.
+    //! Exports an Vector using the Core::LinAlg::Export object.
     void export_to(const Vector& A, const Core::LinAlg::Export& Exporter,
         Core::LinAlg::CombineMode CombineMode);
 

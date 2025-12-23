@@ -451,57 +451,6 @@ double Solid::TimeInt::NoxInterface::get_linearized_model_terms(const ::NOX::Abs
   }
 }
 
-/*----------------------------------------------------------------------------*
- *----------------------------------------------------------------------------*/
-double Solid::TimeInt::NoxInterface::get_linearized_energy_model_terms(
-    const ::NOX::Abstract::Group* group, const Epetra_Vector& dir,
-    const NOX::Nln::MeritFunction::LinOrder linorder,
-    const NOX::Nln::MeritFunction::LinType lintype) const
-{
-  double lin_val = 0.0;
-
-  switch (linorder)
-  {
-    case NOX::Nln::MeritFunction::linorder_first:
-    case NOX::Nln::MeritFunction::linorder_all:
-    {
-      switch (lintype)
-      {
-        case NOX::Nln::MeritFunction::lin_wrt_all_dofs:
-        case NOX::Nln::MeritFunction::lin_wrt_primary_dofs:
-        {
-          Core::LinAlg::Vector<double> str_gradient(dir.Map(), true);
-
-          std::vector<Inpar::Solid::ModelType> constraint_models;
-          find_constraint_models(group, constraint_models);
-
-          // assemble the force and exclude all constraint models
-          int_ptr_->assemble_force(str_gradient, &constraint_models);
-          str_gradient.dot(dir, &lin_val);
-
-          Core::IO::cout(Core::IO::debug)
-              << "LinEnergy   D_{d} (Energy) = " << lin_val << Core::IO::endl;
-
-          break;
-        }
-        default:
-        {
-          /* do nothing, there are only primary dofs */
-          break;
-        }
-      }
-
-      break;
-    }
-    default:
-    {
-      /* do nothing, there are no high order terms */
-      break;
-    }
-  }
-
-  return lin_val;
-}
 
 /*----------------------------------------------------------------------------*
  *----------------------------------------------------------------------------*/

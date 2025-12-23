@@ -26,12 +26,6 @@ Core::LinAlg::FEVector<T>::FEVector(const Map& Map, int numVectors, bool ignoreN
 }
 
 template <typename T>
-Core::LinAlg::FEVector<T>::FEVector(const Epetra_FEVector& Source)
-    : vector_(Utils::make_owner<Epetra_FEVector>(Source))
-{
-}
-
-template <typename T>
 Core::LinAlg::FEVector<T>::FEVector(const FEVector& other)
     : vector_(Utils::make_owner<Epetra_FEVector>(other.get_ref_of_epetra_fevector()))
 {

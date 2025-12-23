@@ -172,7 +172,7 @@ void parse_commandline_arguments(CommandlineArguments& arguments)
 
   if (my_rank == 0)
   {
-    std::cout << "input is read from     " << input_filename << std::endl;
+    std::cout << "Read input from file '" << input_filename << "'\n";
   }
   parse_restart_definition(
       inout, inout_args, restart_file_identifier, output_file_identifier, restart_group, arguments);

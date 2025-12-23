@@ -25,12 +25,6 @@ Core::LinAlg::Vector<T>::Vector(const Map& Map, bool zeroOut)
 }
 
 template <typename T>
-Core::LinAlg::Vector<T>::Vector(const Epetra_BlockMap& Map, bool zeroOut)
-    : vector_(Utils::make_owner<Epetra_Vector>(Map, zeroOut))
-{
-}
-
-template <typename T>
 Core::LinAlg::Vector<T>::Vector(const Epetra_Vector& Source)
     : vector_(Utils::make_owner<Epetra_Vector>(Source))
 {

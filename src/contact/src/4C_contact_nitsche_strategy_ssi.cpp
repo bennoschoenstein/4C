@@ -171,8 +171,7 @@ std::shared_ptr<const Core::LinAlg::Vector<double>> CONTACT::NitscheStrategySsi:
   {
     case CONTACT::VecBlockType::elch:
     case CONTACT::VecBlockType::scatra:
-      return std::make_shared<Core::LinAlg::Vector<double>>(
-          *(fs_->get_ref_of_epetra_fevector())(0));
+      return std::make_shared<Core::LinAlg::Vector<double>>(*(*fs_)(0));
     default:
       return CONTACT::NitscheStrategy::get_rhs_block_ptr(bp);
   }

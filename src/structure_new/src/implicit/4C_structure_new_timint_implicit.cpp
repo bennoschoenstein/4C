@@ -519,9 +519,6 @@ void Solid::TimeInt::Implicit::print_jacobian_in_matlab_format(
           NOX::Nln::LinSystem::operator_type_to_string(jac_type));
     }
   }
-
-  // print sparsity pattern to file
-  //  Core::LinAlg::PrintSparsityToPostscript( *(system_matrix()->EpetraMatrix()) );
 }
 
 

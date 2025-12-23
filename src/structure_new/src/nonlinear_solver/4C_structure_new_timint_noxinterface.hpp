@@ -154,10 +154,6 @@ namespace Solid
       //! check if init and setup have been called
       void check_init_setup() const;
 
-      double get_linearized_energy_model_terms(const ::NOX::Abstract::Group* group,
-          const Epetra_Vector& dir, const NOX::Nln::MeritFunction::LinOrder linorder,
-          const NOX::Nln::MeritFunction::LinType lintype) const;
-
       void find_constraint_models(const ::NOX::Abstract::Group* grp,
           std::vector<Inpar::Solid::ModelType>& constraint_models) const;
 

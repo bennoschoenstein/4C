@@ -1161,9 +1161,9 @@ void Mortar::Interface::redistribute()
         Core::Rebalance::build_graph(*idiscret_, sroweles);
 
     Teuchos::ParameterList rebalanceParams;
-    rebalanceParams.set<std::string>("num_global_parts", std::to_string(sproc));
-    rebalanceParams.set<std::string>("imbalance_tolerance", std::to_string(imbalance_tol));
-    rebalanceParams.set<std::string>("algorithm", "parmetis");
+    rebalanceParams.set("num_global_parts", sproc);
+    rebalanceParams.set("imbalance_tolerance", imbalance_tol);
+    rebalanceParams.set("algorithm", "parmetis");
 
     std::tie(srownodes, scolnodes) =
         Core::Rebalance::rebalance_node_maps(*snodegraph, rebalanceParams);
@@ -1221,9 +1221,9 @@ void Mortar::Interface::redistribute_master_side(std::shared_ptr<Core::LinAlg::M
 
   Teuchos::ParameterList rebalanceParams;
 
-  rebalanceParams.set<std::string>("num_global_parts", std::to_string(parts));
-  rebalanceParams.set<std::string>("imbalance_tolerance", std::to_string(imbalance));
-  rebalanceParams.set<std::string>("algorithm", "parmetis");
+  rebalanceParams.set("num_global_parts", parts);
+  rebalanceParams.set("imbalance_tolerance", imbalance);
+  rebalanceParams.set("algorithm", "parmetis");
 
   std::tie(rownodes, colnodes) = Core::Rebalance::rebalance_node_maps(*nodegraph, rebalanceParams);
 }

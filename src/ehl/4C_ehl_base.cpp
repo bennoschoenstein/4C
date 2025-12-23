@@ -531,14 +531,12 @@ void EHL::Base::setup_unprojectable_dbc()
   inf_gap_toggle.complete(Core::LinAlg::CombineMode::max, false);
 
   for (int i = 0; i < inf_gap_toggle.get_map().num_my_elements(); ++i)
-    if (inf_gap_toggle.get_ref_of_epetra_fevector().operator()(0)->operator[](i) > 0.5)
-      inf_gap_toggle.get_ref_of_epetra_fevector().operator()(0)->operator[](i) = 1.;
+    if (inf_gap_toggle.as_multi_vector().get_vector(0).get_values()[i] > 0.5)
+      inf_gap_toggle.as_multi_vector().get_vector(0).get_values()[i] = 1.;
 
   std::shared_ptr<Core::LinAlg::Vector<double>> exp =
       std::make_shared<Core::LinAlg::Vector<double>>(*ada_strDisp_to_lubPres_->master_dof_map());
-  Core::LinAlg::View inf_gap_toggle_view(inf_gap_toggle.get_ref_of_epetra_fevector());
-  Core::LinAlg::export_to(
-      inf_gap_toggle_view.underlying().as_multi_vector(), exp->as_multi_vector());
+  Core::LinAlg::export_to(inf_gap_toggle.as_multi_vector(), exp->as_multi_vector());
   inf_gap_toggle_lub_ = ada_strDisp_to_lubPres_->master_to_slave(*exp);
 
   static std::shared_ptr<Core::LinAlg::Vector<double>> old_toggle = nullptr;

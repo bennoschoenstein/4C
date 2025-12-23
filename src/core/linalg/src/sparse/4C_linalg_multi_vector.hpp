@@ -35,16 +35,9 @@ namespace Core::LinAlg
     static_assert(std::is_same_v<T, double>, "Only double is supported for now");
 
    public:
-    /// Basic multi-vector constructor to create vector based on a map and initialize memory with
-    /// zeros.
-    explicit MultiVector(const Epetra_BlockMap& Map, int num_columns, bool zeroOut = true);
-
     explicit MultiVector(const Map& Map, int num_columns, bool zeroOut = true);
 
     explicit MultiVector(const Epetra_MultiVector& source);
-
-    explicit MultiVector(const Epetra_FEVector& source);
-
 
     MultiVector(const MultiVector& other);
 
@@ -92,7 +85,7 @@ namespace Core::LinAlg
     //! Initialize all values in a multi-vector with const value.
     void put_scalar(double ScalarConstant);
 
-    //! Returns a view of the EpetraMap as type Map for this multi-vector.
+    //! Returns a view of the underlying map as type Map for this multi-vector.
     const Map& get_map() const { return map_.sync(vector_->Map()); };
 
     //! Returns the MPI_Comm for this multi-vector.
@@ -130,7 +123,7 @@ namespace Core::LinAlg
 
     void replace_global_value(long long GlobalRow, int VectorIndex, double ScalarValue);
 
-    //! Multiply a Epetra_MultiVector with another, element-by-element.
+    //! Multiply a MultiVector with another, element-by-element.
     void multiply(double ScalarAB, const MultiVector& A, const MultiVector& B, double ScalarThis);
 
     //! Matrix-Matrix multiplication, \e this = ScalarThis*\e this + ScalarAB*A*B.
@@ -138,13 +131,13 @@ namespace Core::LinAlg
         const MultiVector& B, double ScalarThis);
 
     //! Puts element-wise reciprocal values of input Multi-vector in target.
-    void reciprocal(const Epetra_MultiVector& A);
+    void reciprocal(const MultiVector& A);
 
-    //! Imports an Epetra_DistObject using the Core::LinAlg::Import object.
+    //! Imports an MultiVector using the Core::LinAlg::Import object.
     void import(const MultiVector& A, const Core::LinAlg::Import& Importer,
         Core::LinAlg::CombineMode CombineMode);
 
-    //! Imports an Epetra_DistObject using the Core::LinAlg::Export object.
+    //! Imports an MultiVector using the Core::LinAlg::Export object.
     void import(const MultiVector& A, const Core::LinAlg::Export& Exporter,
         Core::LinAlg::CombineMode CombineMode);
 

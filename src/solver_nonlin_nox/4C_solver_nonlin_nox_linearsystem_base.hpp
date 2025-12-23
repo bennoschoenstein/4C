@@ -12,7 +12,6 @@
 
 #include "4C_linalg_sparseoperator.hpp"
 
-#include <Epetra_Operator.h>
 #include <NOX_Utils.H>
 #include <Teuchos_ParameterList.hpp>
 
