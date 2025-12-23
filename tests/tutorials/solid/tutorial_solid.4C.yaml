@@ -3,7 +3,7 @@ PROBLEM TYPE:
 PROBLEM SIZE:
   DIM: 3
 STRUCTURE GEOMETRY:
-  FILE: tutorial_solid_geo_coarse.e
+  FILE: tutorial_solid_geo_intermediate.e
   SHOW_INFO: detailed_summary
   ELEMENT_BLOCKS:
     - ID: 1
@@ -14,9 +14,9 @@ STRUCTURE GEOMETRY:
 STRUCTURAL DYNAMIC:
   INT_STRATEGY: Standard
   DYNAMICTYPE: Statics
-  TIMESTEP: 0.2
-  RESTARTEVERY: 60
-  NUMSTEP: 5 # use 60 here to perform the full analysis
+  TIMESTEP: 0.075
+  RESTARTEVERY: 160
+  NUMSTEP: 160 # use 60 here to perform the full analysis
   MAXTIME: 12.0
   TOLDISP: 1.0e-4
   TOLRES: 1.0e-4
